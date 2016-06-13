@@ -15,6 +15,7 @@
 		5BE691211D0EABCF00C80EA4 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5BE6911F1D0EABCF00C80EA4 /* LaunchScreen.storyboard */; };
 		5BE6912C1D0EABCF00C80EA4 /* JXWaterfallTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BE6912B1D0EABCF00C80EA4 /* JXWaterfallTests.m */; };
 		5BE691371D0EABCF00C80EA4 /* JXWaterfallUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BE691361D0EABCF00C80EA4 /* JXWaterfallUITests.m */; };
+		5BE691491D0EAD2200C80EA4 /* JXWaterflowLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BE691481D0EAD2200C80EA4 /* JXWaterflowLayout.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -51,6 +52,8 @@
 		5BE691321D0EABCF00C80EA4 /* JXWaterfallUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = JXWaterfallUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		5BE691361D0EABCF00C80EA4 /* JXWaterfallUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JXWaterfallUITests.m; sourceTree = "<group>"; };
 		5BE691381D0EABCF00C80EA4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		5BE691471D0EAD2200C80EA4 /* JXWaterflowLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JXWaterflowLayout.h; sourceTree = "<group>"; };
+		5BE691481D0EAD2200C80EA4 /* JXWaterflowLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JXWaterflowLayout.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -105,6 +108,8 @@
 				5BE691151D0EABCF00C80EA4 /* AppDelegate.m */,
 				5BE691171D0EABCF00C80EA4 /* ViewController.h */,
 				5BE691181D0EABCF00C80EA4 /* ViewController.m */,
+				5BE691471D0EAD2200C80EA4 /* JXWaterflowLayout.h */,
+				5BE691481D0EAD2200C80EA4 /* JXWaterflowLayout.m */,
 				5BE6911A1D0EABCF00C80EA4 /* Main.storyboard */,
 				5BE6911D1D0EABCF00C80EA4 /* Assets.xcassets */,
 				5BE6911F1D0EABCF00C80EA4 /* LaunchScreen.storyboard */,
@@ -271,6 +276,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5BE691191D0EABCF00C80EA4 /* ViewController.m in Sources */,
+				5BE691491D0EAD2200C80EA4 /* JXWaterflowLayout.m in Sources */,
 				5BE691161D0EABCF00C80EA4 /* AppDelegate.m in Sources */,
 				5BE691131D0EABCF00C80EA4 /* main.m in Sources */,
 			);
@@ -496,6 +502,7 @@
 				5BE6913D1D0EABCF00C80EA4 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		5BE6913E1D0EABCF00C80EA4 /* Build configuration list for PBXNativeTarget "JXWaterfallTests" */ = {
 			isa = XCConfigurationList;
@@ -504,6 +511,7 @@
 				5BE691401D0EABCF00C80EA4 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		5BE691411D0EABCF00C80EA4 /* Build configuration list for PBXNativeTarget "JXWaterfallUITests" */ = {
 			isa = XCConfigurationList;
@@ -512,6 +520,7 @@
 				5BE691431D0EABCF00C80EA4 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
