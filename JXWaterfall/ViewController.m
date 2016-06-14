@@ -35,7 +35,7 @@ static NSString * const identifier = @"layout";
 #pragma mark - UICollectionViewDataSource
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-    return 10;
+    return 50;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
@@ -43,14 +43,7 @@ static NSString * const identifier = @"layout";
     
     cell.backgroundColor = [UIColor orangeColor];
     
-    NSInteger tag = 10;
-    UILabel * label = (UILabel *)[cell.contentView viewWithTag:tag];
-    if (label == nil) {
-        label = [[UILabel alloc] init];
-        [cell.contentView addSubview:label];
-    }
-    label.text = [NSString stringWithFormat:@"这是测试数据%zd",indexPath.item];
-    [label sizeToFit];
+
     return cell;
 }
 

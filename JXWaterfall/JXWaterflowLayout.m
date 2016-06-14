@@ -8,19 +8,41 @@
 
 #import "JXWaterflowLayout.h"
 
+/** 默认的列数 */
+static const NSInteger JXDefaultColCount = 3;
+/** 每一列之间的间距 */
+static const CGFloat JXDefaultColMargin = 10;
+/** 每一行之间的间距 */
+static const CGFloat JXDefaultRowMargin = 10;
+/** 边缘间距 */
+static const UIEdgeInsets JXDefaultUIEdgeInsets = {10,10,10,10};
+
+
 @interface JXWaterflowLayout ()
 
 /** 存放所有cell的布局属性 */
 @property (nonatomic,strong) NSMutableArray * array;
+/** 用来存放所有列的最大Y值 */
+@property (nonatomic,strong) NSMutableArray * maxYs;
+
 @end
 
 @implementation JXWaterflowLayout
 
 /**
- *  初始化,只会调用一次
+ *  初始化,只会调用一次,刷新之后还会继续调用
  */
 - (void)prepareLayout {
     [super prepareLayout];
+    
+    // 先清除以前计算的所有高度
+    [self.maxYs removeAllObjects];
+    
+    // 循环添加默认值
+    for (NSInteger i = 0; i < JXDefaultColCount; i++) {
+        [self.maxYs addObject:@(JXDefaultUIEdgeInsets.top)];
+    }
+    
     
     // 清楚之前的所有的布局属性(当有刷新的时候数组会越来越大)
     [self.array removeAllObjects];
@@ -55,13 +77,57 @@
     // 创建布局属性
     UICollectionViewLayoutAttributes * attrs = [UICollectionViewLayoutAttributes layoutAttributesForCellWithIndexPath:indexPath];
     
-    // 设置布局属性的frame
-    attrs.frame = CGRectMake(arc4random_uniform(300), arc4random_uniform(300), arc4random_uniform(300), arc4random_uniform(300));
+    // collectionView的宽度
+    CGFloat collectionW = self.collectionView.frame.size.width;
+    
+    
+    // 设置布局属性的frame（主要是找到最短的一列就可以）
+    
+    // 设置宽度
+    CGFloat w = (collectionW - JXDefaultUIEdgeInsets.left - JXDefaultUIEdgeInsets.right - (JXDefaultColCount - 1) * JXDefaultColMargin ) / JXDefaultColCount;
+    // 设置高度
+    CGFloat h = 100 + arc4random_uniform(50);
+    
+    // 找出y值最小的一列
+    NSInteger destColumn = 0;
+    CGFloat minColumnHeight = [self.maxYs[0] doubleValue];
+    for (NSInteger i = 1; i < JXDefaultColCount; i++) {
+        // 取出第i列的高度
+        CGFloat columHeight = [self.maxYs[i] doubleValue];
+        
+        // 如果比最小的还要小，就记录
+        if (minColumnHeight > columHeight) {
+            minColumnHeight = columHeight;
+            destColumn = i;
+        }
+    }
+    // 设置x值(根据找到的最小的y值来计算)
+    CGFloat x = JXDefaultUIEdgeInsets.left + destColumn * (w + JXDefaultRowMargin);
+    // 设置y值
+    CGFloat y = minColumnHeight;
+    if (y != JXDefaultUIEdgeInsets.top) { // 如果不是第一行
+        y += JXDefaultUIEdgeInsets.top;
+    }
+    attrs.frame = CGRectMake(x, y, w, h);
+    
+    // 更新最短一列的高度
+    self.maxYs[destColumn] = @(CGRectGetMaxY(attrs.frame));
+    
     return attrs;
 }
 
 - (CGSize)collectionViewContentSize {
-    return CGSizeMake(0, 1000);
+    // 计算contentsize
+    CGFloat maxColumnHeight = [self.maxYs[0] doubleValue];
+    for (NSInteger i = 1; i < JXDefaultColCount; i++) {
+        // 取出第i列的高度
+        CGFloat columnHeight = [self.maxYs[i] doubleValue];
+        if (maxColumnHeight < columnHeight) {
+            maxColumnHeight = columnHeight;
+            
+        }
+    }
+    return CGSizeMake(0, maxColumnHeight + JXDefaultUIEdgeInsets.bottom);
 }
 
 #pragma mark - 懒加载
@@ -71,4 +137,12 @@
     }
     return _array;
 }
+
+- (NSMutableArray *)maxYs {
+    if (_maxYs == nil) {
+        _maxYs = [NSMutableArray array];
+    }
+    return _maxYs;
+}
+
 @end
