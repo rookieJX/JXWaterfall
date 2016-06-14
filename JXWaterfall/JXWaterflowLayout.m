@@ -7,7 +7,6 @@
 //
 
 #import "JXWaterflowLayout.h"
-
 /** 默认的列数 */
 static const NSInteger JXDefaultColCount = 3;
 /** 每一列之间的间距 */
@@ -25,9 +24,52 @@ static const UIEdgeInsets JXDefaultUIEdgeInsets = {10,10,10,10};
 /** 用来存放所有列的最大Y值 */
 @property (nonatomic,strong) NSMutableArray * maxYs;
 
+/** 列之间距离 */
+- (CGFloat)colMargin;
+/** 行之间距离 */
+- (CGFloat)rowMargin;
+/** 列数 */
+- (NSInteger)colCount;
+/** 边缘距离 */
+- (UIEdgeInsets)edgeInsets;
+
 @end
 
 @implementation JXWaterflowLayout
+
+- (CGFloat)colMargin {
+    if ([self.delegate respondsToSelector:@selector(ColMarginInWaterflowLayout:)]) {
+        return [self.delegate ColMarginInWaterflowLayout:self];
+    } else {
+        return JXDefaultColMargin;
+    }
+}
+
+- (CGFloat)rowMargin {
+    if ([self.delegate respondsToSelector:@selector(RowMarginInWaterflowLayout:)]) {
+        return [self.delegate RowMarginInWaterflowLayout:self];
+    } else {
+        return JXDefaultRowMargin;
+    }
+}
+
+- (NSInteger)colCount {
+    if ([self.delegate respondsToSelector:@selector(ColCountInWaterflowLayout:)]) {
+        return [self.delegate ColCountInWaterflowLayout:self];
+    } else {
+        return JXDefaultColCount;
+    }
+}
+
+- (UIEdgeInsets)edgeInsets {
+    if ([self.delegate respondsToSelector:@selector(edgeInsetsInWaterflowLayout:)]) {
+        return [self.delegate edgeInsetsInWaterflowLayout:self];
+    } else {
+        return JXDefaultUIEdgeInsets;
+    }
+}
+
+
 
 /**
  *  初始化,只会调用一次,刷新之后还会继续调用
@@ -39,8 +81,9 @@ static const UIEdgeInsets JXDefaultUIEdgeInsets = {10,10,10,10};
     [self.maxYs removeAllObjects];
     
     // 循环添加默认值
-    for (NSInteger i = 0; i < JXDefaultColCount; i++) {
-        [self.maxYs addObject:@(JXDefaultUIEdgeInsets.top)];
+    for (NSInteger i = 0; i < self.colCount; i++) {
+        
+        [self.maxYs addObject:@(self.edgeInsets.top)];
     }
     
     
@@ -84,14 +127,15 @@ static const UIEdgeInsets JXDefaultUIEdgeInsets = {10,10,10,10};
     // 设置布局属性的frame（主要是找到最短的一列就可以）
     
     // 设置宽度
-    CGFloat w = (collectionW - JXDefaultUIEdgeInsets.left - JXDefaultUIEdgeInsets.right - (JXDefaultColCount - 1) * JXDefaultColMargin ) / JXDefaultColCount;
+    CGFloat w = (collectionW - self.edgeInsets.left - self.edgeInsets.right - (self.colCount - 1) * self.colMargin ) / self.colCount;
+    
     // 设置高度
-    CGFloat h = 100 + arc4random_uniform(50);
+    CGFloat h = [self.delegate waterflowLayout:self heightForItemAtIndex:indexPath.item itemWidth:w];
     
     // 找出y值最小的一列
     NSInteger destColumn = 0;
     CGFloat minColumnHeight = [self.maxYs[0] doubleValue];
-    for (NSInteger i = 1; i < JXDefaultColCount; i++) {
+    for (NSInteger i = 1; i < self.colCount; i++) {
         // 取出第i列的高度
         CGFloat columHeight = [self.maxYs[i] doubleValue];
         
@@ -102,11 +146,11 @@ static const UIEdgeInsets JXDefaultUIEdgeInsets = {10,10,10,10};
         }
     }
     // 设置x值(根据找到的最小的y值来计算)
-    CGFloat x = JXDefaultUIEdgeInsets.left + destColumn * (w + JXDefaultRowMargin);
+    CGFloat x = self.edgeInsets.left + destColumn * (w + self.rowMargin);
     // 设置y值
     CGFloat y = minColumnHeight;
-    if (y != JXDefaultUIEdgeInsets.top) { // 如果不是第一行
-        y += JXDefaultUIEdgeInsets.top;
+    if (y != self.edgeInsets.top) { // 如果不是第一行
+        y += self.edgeInsets.top;
     }
     attrs.frame = CGRectMake(x, y, w, h);
     
@@ -119,7 +163,7 @@ static const UIEdgeInsets JXDefaultUIEdgeInsets = {10,10,10,10};
 - (CGSize)collectionViewContentSize {
     // 计算contentsize
     CGFloat maxColumnHeight = [self.maxYs[0] doubleValue];
-    for (NSInteger i = 1; i < JXDefaultColCount; i++) {
+    for (NSInteger i = 1; i < self.colCount; i++) {
         // 取出第i列的高度
         CGFloat columnHeight = [self.maxYs[i] doubleValue];
         if (maxColumnHeight < columnHeight) {
@@ -127,7 +171,7 @@ static const UIEdgeInsets JXDefaultUIEdgeInsets = {10,10,10,10};
             
         }
     }
-    return CGSizeMake(0, maxColumnHeight + JXDefaultUIEdgeInsets.bottom);
+    return CGSizeMake(0, maxColumnHeight + self.edgeInsets.bottom);
 }
 
 #pragma mark - 懒加载
